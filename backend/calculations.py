@@ -1,34 +1,25 @@
 import pandas as pd
 import os
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
-csv_path = os.path.join(script_dir, 'data.csv')
 
-population_data = pd.read_csv(csv_path, sep='\t')
 
-def estimate_cumulative_births(population_data):
-    cumulative_births = 0
-    
-    for i in range(len(population_data) - 1):
-        year1 = population_data.iloc[i]['Year']
-        year2 = population_data.iloc[i+1]['Year']
-        pop1 = population_data.iloc[i]['Population']
-        pop2 = population_data.iloc[i+1]['Population']
-        
-        time_period = year2 - year1
-        
-        # Use crude birth rate instead
-        # Historically ~40-50 births per 1000 people per year
-        birth_rate = 0.045  # 45 per 1000
-        
-        # Average population during the period
-        avg_pop = (pop1 + pop2) / 2
-        
-        births = avg_pop * birth_rate * time_period
-        cumulative_births += births
-    print(f"Cumulative Births Estimate: {cumulative_births}")
-    return cumulative_births
-
+def do_calculation(start_year, end_year, data):
+    starting_population = data.loc[data['Year'] == start_year, 'Population'].values[0]
+    total_births = data.loc[(data['Year'] == end_year), 'Cumulative_Births'].values[0] - (
+                        data.loc[(data['Year'] == start_year), 'Cumulative_Births'].values[0]
+                    )
+    people_alive = starting_population + total_births
+    total_people = data.loc[data['Year'] == 2025, 'Cumulative_Births'].values[0]
+    percent = (people_alive / total_people) * 100
+    percent = round(percent, 2)
+    return percent
 
 if __name__ == "__main__":
-    estimate_cumulative_births(population_data)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(script_dir, 'data1.csv')
+    data = pd.read_csv(csv_path)
+
+    start_year = 1950
+    end_year = 2025
+    result = do_calculation(start_year, end_year, data)
+    print(f"Percentage of people born between {start_year} and {end_year}: {result}%")
