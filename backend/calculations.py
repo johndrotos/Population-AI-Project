@@ -16,7 +16,7 @@ def do_calculation(start_year, end_year, data):
 
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    csv_path = os.path.join(script_dir, 'data1.csv')
+    csv_path = os.path.join(script_dir, 'data.csv')
     data = pd.read_csv(csv_path)
 
     start_year = 1950
