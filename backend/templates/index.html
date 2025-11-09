@@ -12,6 +12,8 @@
 </form>
 {% if calculation_result %}
     <h2>Calculation Result:</h2>
+    <h3>Start year: {{ start_year }}</h3>
+    <h3>End year: {{ end_year }}</h3>
     <p>{{ calculation_result }}</p>
 {% endif %}
 {% endblock %}

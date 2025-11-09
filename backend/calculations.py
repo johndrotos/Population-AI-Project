@@ -3,7 +3,15 @@ import os
 
 
 
-def do_calculation(start_year, end_year, data):
+def do_calculation(start_year, end_year):
+    start_year = int(start_year)
+    end_year = int(end_year)
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(script_dir, 'data.csv')
+    data = pd.read_csv(csv_path)
+
+
     starting_population = data.loc[data['Year'] == start_year, 'Population'].values[0]
     total_births = data.loc[(data['Year'] == end_year), 'Cumulative_Births'].values[0] - (
                         data.loc[(data['Year'] == start_year), 'Cumulative_Births'].values[0]
@@ -13,13 +21,3 @@ def do_calculation(start_year, end_year, data):
     percent = (people_alive / total_people) * 100
     percent = round(percent, 2)
     return percent
-
-if __name__ == "__main__":
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    csv_path = os.path.join(script_dir, 'data.csv')
-    data = pd.read_csv(csv_path)
-
-    start_year = 1950
-    end_year = 2025
-    result = do_calculation(start_year, end_year, data)
-    print(f"Percentage of people born between {start_year} and {end_year}: {result}%")
