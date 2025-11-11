@@ -2,6 +2,7 @@ from flask import Flask, redirect, url_for, render_template, request, session, f
 from datetime import timedelta
 import pandas as pd
 from calculations import do_calculation
+from claude import extract_date_range
 
 app = Flask(__name__)
 app.secret_key = "Sana"
@@ -13,22 +14,19 @@ population_data = pd.read_csv('data.csv')
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
-        start_year = request.form['start_year']
-        end_year = request.form['end_year']
-        calculation_result = calculate(start_year, end_year)
-        return render_template('index.html', 
-                               start_year=start_year,
-                               end_year=end_year,
-                               calculation_result=calculation_result)
+        event = request.form['event']
+        start_year, end_year = extract_date_range(event)
+        if start_year is None or end_year is None:
+            return render_template('index.html', error="Could not extract valid years from the query.")
+        calculation_result = do_calculation(start_year, end_year)
+        
+        return render_template('index.html',
+                                event=event,
+                                start_year=start_year,
+                                end_year=end_year,
+                                calculation_result=calculation_result)
     else:
         return render_template('index.html')
-
-@app.route('/calculate', methods=['POST'])
-def calculate(start_year, end_year):
-    # Placeholder for calculation logic
-    return do_calculation(start_year, end_year)
-
-
 
 
 
