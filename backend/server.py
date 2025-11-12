@@ -17,7 +17,7 @@ def home():
         event = request.form['event']
         start_year, end_year = extract_date_range(event)
         if start_year is None or end_year is None:
-            return render_template('index.html', error="Could not extract valid years from the query.")
+            return render_template('index.html', error=f"Could not extract valid years from the query -- {event}.")
         calculation_result = do_calculation(start_year, end_year)
         
         return render_template('index.html',

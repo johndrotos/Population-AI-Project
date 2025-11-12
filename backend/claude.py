@@ -35,7 +35,7 @@ def extract_date_range(user_query):
     
     try:
         message = client.messages.create(
-            model="claude-3-sonnet-20241022",  # Note: correct model name
+            model="claude-sonnet-4-5",  # Always uses latest Claude Sonnet 4.5
             max_tokens=100,  # We only need a short response
             messages=[
                 {"role": "user", "content": prompt}
